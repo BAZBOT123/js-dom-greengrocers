@@ -54,19 +54,21 @@ const state = {
   cart: []
 };
 
-const fruitList = document.querySelector('ul')
-fruitList.setAttribute('class', 'item-list store--item-list')
 
 
+function renderStoreItem() {
 
-function groceries() {
+  const fruitList = document.querySelector('ul')
+  fruitList.setAttribute('class', 'item-list store--item-list')
 
   for (const item of state.items) {
     const li = document.createElement('li')
     fruitList.appendChild(li)
+
     const div = document.createElement('div')
     div.setAttribute('class', 'store--item-icon')
     li.appendChild(div)
+
     const image = document.createElement('img')
     image.src = `assets/icons/${item.id}.svg`
     image.alt = `${item.name}`
@@ -76,8 +78,47 @@ function groceries() {
     li.appendChild(button)
     button.innerText = 'Add to cart'
 
-
-
+    button.addEventListener('click', function () {
+      cart.unshift(state.items)
+    })
   }
 }
-groceries() 
+
+renderStoreItem()
+
+
+function RenderCartItem(item) {
+
+  const div = document.createElement('div')
+  div.setAttribute('cart--item-list-container')
+
+  const cartList = document.querySelector('ul')
+  cartList.setAttribute('class', 'item-list cart--item-list')
+  div.append('cartList')
+
+  const li = document.createElement('li')
+  cartList.appendChild(li)
+
+  const image = document.createElement('img')
+  image.src = `assets/icons/${item.id}.svg`
+  image.alt = `${item.name}`
+
+  const p = document.createElement('p')
+  p.innerText = `${item.name}`
+
+  const removeButton = document.createElement('button')
+  removeButton.setAttribute('class', 'quantity-btn remove-btn center')
+  removeButton.innerText = '-'
+
+  const span = document.createElement('span')
+  span.setAttribute('class', 'quantity-text center')
+  span.innerText = '1'
+
+  const addButton = document.createElement('button')
+  addButton.setAttribute('class', 'quantity-btn add-btn center')
+  addButton.innerText = '+'
+
+  li.append(image, p, removeButton, span, addButton)
+}
+
+RenderCartItem(item)
