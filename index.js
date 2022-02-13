@@ -55,9 +55,12 @@ const state = {
 };
 
 const fruitList = document.querySelector('ul')
+fruitList.setAttribute('class', 'item-list store--item-list')
+
 
 
 function groceries() {
+
   for (const item of state.items) {
     const li = document.createElement('li')
     fruitList.appendChild(li)
@@ -65,9 +68,15 @@ function groceries() {
     div.setAttribute('class', 'store--item-icon')
     li.appendChild(div)
     const image = document.createElement('img')
-    image.src = `asset/icons/${state.items.id}.svg`
-    image.alt = `${state.items.name}`
+    image.src = `assets/icons/${item.id}.svg`
+    image.alt = `${item.name}`
     div.appendChild(image)
+
+    const button = document.createElement('button')
+    li.appendChild(button)
+    button.innerText = 'Add to cart'
+
+
 
   }
 }
