@@ -54,32 +54,57 @@ const state = {
   cart: []
 };
 
+const fruitList = document.querySelector('#itemList')
+
+
+const cartList = document.querySelector('#cartList')
+  
+
+function render(){
+  clear();
+  renderStoreItem()
+  renderCartItem()
+}
+
+function clear() {
+  fruitList.innerHTML = ''
+  cartList.innerHTML = ''
+}
 
 
 function renderStoreItem() {
 
-  const fruitList = document.querySelector('ul')
-  fruitList.setAttribute('class', 'item-list store--item-list')
 
   for (const item of state.items) {
     const li = document.createElement('li')
-    fruitList.appendChild(li)
+    fruitList.append(li)
 
     const div = document.createElement('div')
     div.setAttribute('class', 'store--item-icon')
-    li.appendChild(div)
+    li.append(div)
 
     const image = document.createElement('img')
     image.src = `assets/icons/${item.id}.svg`
     image.alt = `${item.name}`
-    div.appendChild(image)
+    div.append(image)
 
     const button = document.createElement('button')
-    li.appendChild(button)
+    li.append(button)
     button.innerText = 'Add to cart'
 
     button.addEventListener('click', function () {
-      cart.unshift(state.items)
+
+      const existingOrderItem = state.items.find(i => i.item === item)
+            if(existingOrderItem!==undefined) {
+              existingOrderItem.quantity++
+            }
+
+      state.cart.push({
+        quantity: 1,
+        item: item
+        
+      })
+      render()
     })
   }
 }
@@ -87,38 +112,61 @@ function renderStoreItem() {
 renderStoreItem()
 
 
-function RenderCartItem(item) {
 
-  const div = document.createElement('div')
-  div.setAttribute('cart--item-list-container')
 
-  const cartList = document.querySelector('ul')
-  cartList.setAttribute('class', 'item-list cart--item-list')
-  div.append('cartList')
+function renderCartItem() {
+  
+  for(const orderedItem of state.cart) {
+console.log("hello", orderedItem)
 
   const li = document.createElement('li')
-  cartList.appendChild(li)
+  cartList.append(li)
 
   const image = document.createElement('img')
-  image.src = `assets/icons/${item.id}.svg`
-  image.alt = `${item.name}`
+  image.setAttribute('src', 'cart--item-icon')
+  image.src = `assets/icons/${orderedItem.item.id}.svg`
+  image.alt = `${orderedItem.item.name}`
 
   const p = document.createElement('p')
-  p.innerText = `${item.name}`
+  p.innerText = `${orderedItem.item.name}`
 
   const removeButton = document.createElement('button')
   removeButton.setAttribute('class', 'quantity-btn remove-btn center')
   removeButton.innerText = '-'
+  removeButton.addEventListener('click', function() {
+
+    //1. Update the state
+    orderedItem.quantity--
+    //If quantity is 0, remove it from the ordered list
+    if(orderedItem.quantity===0) {
+      const orderItemIndex = state.items.findIndex( i => i===orderedItem)
+      state.order.splice(orderItemIndex,1)
+    }
+
+    //2. Render the DOM
+    render()
+  })
 
   const span = document.createElement('span')
   span.setAttribute('class', 'quantity-text center')
-  span.innerText = '1'
+  span.innerText = `${orderedItem.quantity}`
 
   const addButton = document.createElement('button')
   addButton.setAttribute('class', 'quantity-btn add-btn center')
   addButton.innerText = '+'
 
+  addButton.addEventListener('click', function() {
+
+    //1. Update the state
+    orderedItem.quantity++
+
+    //2. Render the DOM
+    render()
+  })
+
   li.append(image, p, removeButton, span, addButton)
+  cartList.append(li)
+  }
 }
 
-RenderCartItem(item)
+renderCartItem()
