@@ -58,9 +58,9 @@ const fruitList = document.querySelector('#itemList')
 
 
 const cartList = document.querySelector('#cartList')
-  
 
-function render(){
+
+function render() {
   clear();
   renderStoreItem()
   renderCartItem()
@@ -95,14 +95,14 @@ function renderStoreItem() {
     button.addEventListener('click', function () {
 
       const existingOrderItem = state.items.find(i => i.item === item)
-            if(existingOrderItem!==undefined) {
-              existingOrderItem.quantity++
-            }
+      if (existingOrderItem !== undefined) {
+        existingOrderItem.quantity++
+      }
 
       state.cart.push({
         quantity: 1,
         item: item
-        
+
       })
       render()
     })
@@ -111,62 +111,74 @@ function renderStoreItem() {
 
 renderStoreItem()
 
-
-
-
 function renderCartItem() {
-  
-  for(const orderedItem of state.cart) {
-console.log("hello", orderedItem)
 
-  const li = document.createElement('li')
-  cartList.append(li)
+  for (const orderedItem of state.cart) {
+    console.log("hello", orderedItem)
 
-  const image = document.createElement('img')
-  image.setAttribute('src', 'cart--item-icon')
-  image.src = `assets/icons/${orderedItem.item.id}.svg`
-  image.alt = `${orderedItem.item.name}`
+    const li = document.createElement('li')
+    cartList.append(li)
 
-  const p = document.createElement('p')
-  p.innerText = `${orderedItem.item.name}`
+    const image = document.createElement('img')
+    image.setAttribute('src', 'cart--item-icon')
+    image.src = `assets/icons/${orderedItem.item.id}.svg`
+    image.alt = `${orderedItem.item.name}`
 
-  const removeButton = document.createElement('button')
-  removeButton.setAttribute('class', 'quantity-btn remove-btn center')
-  removeButton.innerText = '-'
-  removeButton.addEventListener('click', function() {
+    const p = document.createElement('p')
+    p.innerText = `${orderedItem.item.name}`
 
-    //1. Update the state
-    orderedItem.quantity--
-    //If quantity is 0, remove it from the ordered list
-    if(orderedItem.quantity===0) {
-      const orderItemIndex = state.items.findIndex( i => i===orderedItem)
-      state.order.splice(orderItemIndex,1)
-    }
+    const removeButton = document.createElement('button')
+    removeButton.setAttribute('class', 'quantity-btn remove-btn center')
+    removeButton.innerText = '-'
+    removeButton.addEventListener('click', function () {
 
-    //2. Render the DOM
-    render()
-  })
+      //1. Update the state
+      orderedItem.quantity--
+      //If quantity is 0, remove it from the ordered list
+      if (orderedItem.quantity === 0) {
+        const orderItemIndex = state.cart.findIndex(i => i === orderedItem)
+        state.cart.splice(orderItemIndex, 1)
+      }
 
-  const span = document.createElement('span')
-  span.setAttribute('class', 'quantity-text center')
-  span.innerText = `${orderedItem.quantity}`
+      //2. Render the DOM
+      render()
+    })
 
-  const addButton = document.createElement('button')
-  addButton.setAttribute('class', 'quantity-btn add-btn center')
-  addButton.innerText = '+'
+    const span = document.createElement('span')
+    span.setAttribute('class', 'quantity-text center')
+    span.innerText = `${orderedItem.quantity}`
 
-  addButton.addEventListener('click', function() {
+    const addButton = document.createElement('button')
+    addButton.setAttribute('class', 'quantity-btn add-btn center')
+    addButton.innerText = '+'
 
-    //1. Update the state
-    orderedItem.quantity++
+    addButton.addEventListener('click', function () {
 
-    //2. Render the DOM
-    render()
-  })
+      //1. Update the state
+      orderedItem.quantity++
 
-  li.append(image, p, removeButton, span, addButton)
-  cartList.append(li)
+      //2. Render the DOM
+      render()
+    })
+
+    li.append(image, p, removeButton, span, addButton)
+    cartList.append(li)
   }
 }
 
-renderCartItem()
+
+function totalPrice() {
+  const total = 0
+  for (const cartItem of state.cart) {
+    console.log(cartItem.item.price)
+    const span = document.querySelector('#totalNumber')
+    span.innerText = `'£' + ${orderedItem.item.price}`
+    return `'£' + ${total} = ${orderedItem.quantity} * ${orderedItem.item.price}`
+  }
+  reduce()
+}
+
+render()
+
+
+
