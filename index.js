@@ -157,11 +157,6 @@ function renderCartItem() {
       //1. Update the state
       addedItem.quantity++
 
-      if (addedItem.quantity === undefined) {
-        const orderItemIndex = state.cart.findIndex(i => i === addedItem)
-        state.cart.splice(orderItemIndex, 1)
-      }
-      
       //2. Render the DOM
       render()
     })
