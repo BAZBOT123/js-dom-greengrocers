@@ -54,9 +54,9 @@ const state = {
   cart: []
 };
 
+
+
 const fruitList = document.querySelector('#itemList')
-
-
 const cartList = document.querySelector('#cartList')
 
 
@@ -64,6 +64,7 @@ function render() {
   clear();
   renderStoreItem()
   renderCartItem()
+  totalPrice()
 }
 
 function clear() {
@@ -73,7 +74,6 @@ function clear() {
 
 
 function renderStoreItem() {
-
 
   for (const item of state.items) {
     const li = document.createElement('li')
@@ -101,9 +101,9 @@ function renderStoreItem() {
 
       state.cart.push({
         quantity: 1,
-        item: item
-
+        item: item,
       })
+
       render()
     })
   }
@@ -113,19 +113,19 @@ renderStoreItem()
 
 function renderCartItem() {
 
-  for (const orderedItem of state.cart) {
-    console.log("hello", orderedItem)
+  for (const addedItem of state.cart) {
+    console.log("hello", addedItem)
 
     const li = document.createElement('li')
     cartList.append(li)
 
     const image = document.createElement('img')
     image.setAttribute('src', 'cart--item-icon')
-    image.src = `assets/icons/${orderedItem.item.id}.svg`
-    image.alt = `${orderedItem.item.name}`
+    image.src = `assets/icons/${addedItem.item.id}.svg`
+    image.alt = `${addedItem.item.name}`
 
     const p = document.createElement('p')
-    p.innerText = `${orderedItem.item.name}`
+    p.innerText = `${addedItem.item.name}`
 
     const removeButton = document.createElement('button')
     removeButton.setAttribute('class', 'quantity-btn remove-btn center')
@@ -133,10 +133,10 @@ function renderCartItem() {
     removeButton.addEventListener('click', function () {
 
       //1. Update the state
-      orderedItem.quantity--
+      addedItem.quantity--
       //If quantity is 0, remove it from the ordered list
-      if (orderedItem.quantity === 0) {
-        const orderItemIndex = state.cart.findIndex(i => i === orderedItem)
+      if (addedItem.quantity === 0) {
+        const orderItemIndex = state.cart.findIndex(i => i === addedItem)
         state.cart.splice(orderItemIndex, 1)
       }
 
@@ -146,7 +146,7 @@ function renderCartItem() {
 
     const span = document.createElement('span')
     span.setAttribute('class', 'quantity-text center')
-    span.innerText = `${orderedItem.quantity}`
+    span.innerText = `${addedItem.quantity}`
 
     const addButton = document.createElement('button')
     addButton.setAttribute('class', 'quantity-btn add-btn center')
@@ -155,8 +155,13 @@ function renderCartItem() {
     addButton.addEventListener('click', function () {
 
       //1. Update the state
-      orderedItem.quantity++
+      addedItem.quantity++
 
+      if (addedItem.quantity === undefined) {
+        const orderItemIndex = state.cart.findIndex(i => i === addedItem)
+        state.cart.splice(orderItemIndex, 1)
+      }
+      
       //2. Render the DOM
       render()
     })
@@ -166,16 +171,14 @@ function renderCartItem() {
   }
 }
 
-
+const cartTotal = document.querySelector('#totalNumber')
 function totalPrice() {
-  const total = 0
+  let total = 0
   for (const cartItem of state.cart) {
-    console.log(cartItem.item.price)
-    const span = document.querySelector('#totalNumber')
-    span.innerText = `'£' + ${orderedItem.item.price}`
-    return `'£' + ${total} = ${orderedItem.quantity} * ${orderedItem.item.price}`
+  total =  total + cartItem.quantity * cartItem.item.price
+      cartTotal.innerText = '£' + total
   }
-  reduce()
+  totalPrice()
 }
 
 render()
